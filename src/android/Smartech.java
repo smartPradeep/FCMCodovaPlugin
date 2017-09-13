@@ -1,29 +1,55 @@
 package com.netcore.plugin;
 
 import android.content.Context;
-import com.netcore.lib.NetcoreSDK;
+
+import in.netcore.lib.NetcoreSDK;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Smartech extends CordovaPlugin {
-   NetcoreSDK.Config config;
-   public long sessionId;
-
+   String identity = "";
+   JSONObject newPayload, profileDetail;
    @Override
    public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) throws JSONException {
       final Context context = this.cordova.getActivity().getApplicationContext();
-      sessionId = System.currentTimeMillis();
-      config = new NetcoreSDK.Config();
-      if (action.equals("track")) {
-         String eventId = data.getString(0);
-         NetcoreSDK.registerAppEvent(context, Integer.parseInt(eventId), sessionId, System.currentTimeMillis(), "", "", config);
-         String message = "Track, " + eventId;
+      if (action.equals("track") && (data.getJSONObject(0) != null)) {
+         JSONObject newData = data.getJSONObject(0);
+         int eventId = Integer.parseInt(newData.getString("eventId"));
+         if(newData.has("identity")){
+            identity = newData.getString("identity");
+         }
+
+         switch(eventId) {
+             case 0 :
+                if(newData.has("profile")){
+                   profileDetail = newData.getJSONObject("profile");
+                }
+                NetcoreSDK.profile(context, identity, profileDetail);
+                break;
+             case 22 :
+                NetcoreSDK.login( context, identity);
+                break;
+             case 23 :
+                NetcoreSDK.logout( context, identity);
+                break;
+             default:
+                if(newData.has("payload")){
+                   newPayload = newData.getJSONObject("payload");
+                }
+                NetcoreSDK.track(context, identity, eventId, newPayload.toString());
+                break;
+         }
+         String message = "Tracking done for Activity Id "+eventId;
          callbackContext.success(message);
          return true;
       } else {
+         String message = "Activity Id is not passed";
+         callbackContext.error(message);
          return false;
       }
    }
 }
+
