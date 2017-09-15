@@ -12,6 +12,7 @@ import org.json.JSONObject;
 public class Smartech extends CordovaPlugin {
    String identity = "";
    JSONObject newPayload, profileDetail;
+
    @Override
    public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) throws JSONException {
       final Context context = this.cordova.getActivity().getApplicationContext();
@@ -35,7 +36,13 @@ public class Smartech extends CordovaPlugin {
              case 23 :
                 NetcoreSDK.logout( context, identity);
                 break;
-             default:
+            case 25 :
+               if(newData.has("applicationId")){
+                  String applicationId = newData.getString("applicationId");
+                  NetcoreSDK.register(cordova.getActivity().getApplication(), applicationId, identity);
+               }
+               break;
+            default:
                 if(newData.has("payload")){
                    newPayload = newData.getJSONObject("payload");
                 }
@@ -52,4 +59,3 @@ public class Smartech extends CordovaPlugin {
       }
    }
 }
-
