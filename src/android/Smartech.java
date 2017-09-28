@@ -2,7 +2,7 @@ package com.netcore.plugin;
 
 import android.content.Context;
 
-import in.netcore.lib.NetcoreSDK;
+import in.netcore.smartechfcm.NetcoreSDK;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
