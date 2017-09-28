@@ -16,9 +16,11 @@
   </js-module>
 
   <platform name="android">
- <framework src="in.netcore.smartechfcm:smartech-fcm:1.0.0" />
-  <framework src="com.google.code.gson:gson:2.8.0" />
-<framework src="com.google.firebase:firebase-messaging:9.6.0" />
+          <framework src="in.netcore.smartechfcm:smartech-fcm:1.0.0" />
+          <framework src="com.google.code.gson:gson:2.8.0" />
+          <framework src="com.google.firebase:firebase-messaging:9.6.0" />
+          <framework src="com.google.gms:google-services:3.0.0" />
+          <plugin src="com.google.gms.google-services" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="Smartech">
         <param name="android-package" value="com.netcore.plugin.Smartech"/>
